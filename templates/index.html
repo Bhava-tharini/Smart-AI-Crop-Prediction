@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CropAI</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">🌿 CropAI</div>
+  <div class="menu">
+    <a href="#">Home</a>
+    <a href="#">Predict</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT HERO -->
+  <div class="hero">
+    <span class="tag">AI-Powered Agriculture</span>
+    <h1>Detect Crop Diseases Instantly with AI</h1>
+    <p>
+      CropAI uses deep learning to identify leaf diseases with high accuracy.
+      Protect your harvest with intelligent, real-time detection.
+    </p>
+
+    <div class="buttons">
+      <button class="primary">Start Predicting</button>
+      <button class="secondary">Learn More</button>
+    </div>
+
+    <div class="features">
+      <span>✅ 95%+ Accuracy</span>
+      <span>✅ Real-time Detection</span>
+      <span>✅ Easy Integration</span>
+    </div>
+  </div>
+
+  <!-- RIGHT CARD -->
+  <div class="card">
+
+    <div class="upload-box">
+      <input type="file" id="imageInput">
+      <p>Upload Leaf Image</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">Healthy<br><b>--%</b></div>
+      <div class="stat">Rust<br><b>--%</b></div>
+      <div class="stat">Mildew<br><b>--%</b></div>
+    </div>
+
+    <button class="analyze" onclick="sendData()">Analyze Crop</button>
+
+    <div class="result" id="resultBox" style="display:none;">
+      <p id="disease"></p>
+      <p id="confidence"></p>
+      <p id="treatment"></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FLOATING CHAT BUTTON -->
+<div class="chat-btn" onclick="toggleChat()">💬</div>
+
+<!-- CHAT WINDOW -->
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">CropAI Assistant</div>
+  <div class="chat-body" id="assistantBox">
+    Hello! Ask me anything about crop diseases 🌱
+  </div>
+  <div class="chat-input">
+    <input type="text" id="message" placeholder="Ask a question...">
+    <button onclick="sendData()">➤</button>
+  </div>
+</div>
+
+<script>
+function toggleChat() {
+  const chat = document.getElementById("chatWindow");
+  chat.style.display = chat.style.display === "block" ? "none" : "block";
+}
+
+async function sendData() {
+  const file = document.getElementById("imageInput").files[0];
+  const message = document.getElementById("message").value;
+
+  if (!file) {
+    alert("Please upload a leaf image first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("message", message);
+
+  const res = await fetch("/api/predict", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  document.getElementById("resultBox").style.display = "block";
+  document.getElementById("disease").innerText = "Disease: " + data.disease;
+  document.getElementById("confidence").innerText = "Confidence: " + data.confidence + "%";
+  document.getElementById("treatment").innerText = "Treatment: " + data.treatment;
+  document.getElementById("assistantBox").innerText = "🤖 " + data.assistant;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Virtual Environment
+venv/
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# Datasets
+dataset/
+train/
+test/
+
+# Model Files
+model/
+*.h5
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# OS / Junk
+*.lnk
+.DS_Store
