@@ -1,88 +1,135 @@
-from flask import Flask, render_template, request, jsonify
-import numpy as np
-import tensorflow as tf
-from PIL import Image
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
+
+# Import database and services
+from backend.database.db import db
+from backend.services.auth_service import token_required
+from backend.services.model_service import ModelService
+from backend.routes.auth import auth_bp
+from backend.routes.history import history_bp
+from backend.routes.tips import tips_bp
+from backend.routes.stats import stats_bp
+from backend.routes.chat import chat_bp
+from backend.database.db import Prediction
+
+# --------------------
+# App Initialization
+# --------------------
 app = Flask(__name__)
 
-# Load model
-MODEL_PATH = "model/crop_disease_model.h5"
-model = tf.keras.models.load_model(MODEL_PATH)
+# Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///cropai.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key-change-in-production')
 
-# Classes
-CLASS_NAMES = [
-    "Potato Early Blight",
-    "Potato Healthy",
-    "Tomato Early Blight",
-    "Tomato Healthy",
-    "Tomato Late Blight"
-]
+# Initialize extensions
+db.init_app(app)
 
-# Treatment base
-TREATMENT = {
-    "Potato Early Blight": "Use fungicide (Mancozeb). Remove infected leaves and avoid overhead watering.",
-    "Potato Healthy": "Plant is healthy. Continue regular watering and sunlight.",
-    "Tomato Early Blight": "Use neem oil or copper fungicide. Ensure good air circulation.",
-    "Tomato Healthy": "Healthy plant. Maintain soil nutrients and proper watering.",
-    "Tomato Late Blight": "Remove infected plants immediately. Use fungicide and avoid wet leaves."
-}
+# CORS Configuration
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            os.getenv('FRONTEND_URL', 'http://localhost:5173')
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
-# Chatbot brain
-def chatbot_reply(disease, user_message):
-    user_message = user_message.lower()
+# Register blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(history_bp)
+app.register_blueprint(tips_bp)
+app.register_blueprint(stats_bp)
+app.register_blueprint(chat_bp)
 
-    if "fertilizer" in user_message:
-        return f"For {disease}, use organic compost and potassium-rich fertilizer."
+# Create database tables
+with app.app_context():
+    db.create_all()
+    print("[CropAI] Database initialized.")
 
-    elif "water" in user_message or "irrigation" in user_message:
-        return f"Water {disease} plants early in the morning. Avoid wetting the leaves."
+# Load ML model at startup
+ModelService.load_model()
 
-    elif "pesticide" in user_message or "spray" in user_message:
-        return f"For {disease}, neem oil or copper fungicide works well."
+# --------------------
+# API Endpoints
+# --------------------
 
-    elif "weather" in user_message:
-        return "Avoid spraying during rainy or very hot weather."
-
-    else:
-        return f"I can help you with fertilizer, watering, pesticide, or weather tips for {disease}."
-
-# Image preprocess
-def preprocess_image(image):
-    img = image.resize((224, 224))
-    img = np.array(img) / 255.0
-    img = np.expand_dims(img, axis=0)
-    return img
-
-# MAIN PAGE
-@app.route("/", methods=["GET", "POST"])
-def index():
-    return render_template("index.html")
-
-# API ENDPOINT (THIS IS WHAT UI CALLS)
 @app.route("/api/predict", methods=["POST"])
-def api_predict():
-    file = request.files["image"]
-    message = request.form.get("message", "")
+@token_required
+def api_predict(user):
+    """
+    Predict disease from image and save to history.
+    Protected route - requires authentication.
+    """
+    if "image" not in request.files:
+        return jsonify({"error": "No image provided. Please upload a file with key 'image'."}), 400
 
-    image = Image.open(file.stream).convert("RGB")
-    processed = preprocess_image(image)
-    prediction = model.predict(processed)
-
-    class_index = np.argmax(prediction)
-    result = CLASS_NAMES[class_index]
-    confidence = round(float(np.max(prediction)) * 100, 2)
-    treatment = TREATMENT[result]
-
-    chat_response = chatbot_reply(result, message) if message else ""
-
+    result = ModelService.predict(request.files["image"])
+    
+    if result["error"]:
+        return jsonify(result), 500
+    
+    # Save prediction to database
+    try:
+        prediction = Prediction(
+            user_id=user.id,
+            image_path="uploaded",  # We'll handle file storage later
+            predicted_disease=result["disease"],
+            confidence=result["confidence"],
+            treatment=result["treatment"]
+        )
+        db.session.add(prediction)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"[CropAI] Failed to save prediction: {e}")
+    
     return jsonify({
-        "disease": result,
-        "confidence": confidence,
-        "treatment": treatment,
-        "assistant": chat_response
-    })
+        "disease": result["disease"],
+        "confidence": result["confidence"],
+        "treatment": result["treatment"]
+    }), 200
 
-# RUN SERVER (ALWAYS LAST)
+
+@app.route("/api/health", methods=["GET"])
+def health():
+    """Health check endpoint."""
+    return jsonify({
+        "status": "ok",
+        "model_loaded": ModelService._model is not None
+    }), 200
+
+
+# --------------------
+# Error Handlers
+# --------------------
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Endpoint not found."}), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal server error."}), 500
+
+
+# --------------------
+# Run Server
+# --------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Development server - use gunicorn in production
+    app.run(
+        host=os.getenv('HOST', '0.0.0.0'),
+        port=int(os.getenv('PORT', 5000)),
+        debug=os.getenv('FLASK_ENV') == 'development'
+    )
 
