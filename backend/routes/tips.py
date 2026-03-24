@@ -6,39 +6,39 @@ tips_bp = Blueprint('tips', __name__, url_prefix='/api/tips')
 DISEASE_REFERENCE = [
     {
         "id": 1,
-        "name": "Tomato Late Blight",
-        "crop": "Tomato",
-        "symptoms": "Water-soaked spots on leaves and stems that quickly turn brown. Rapid spreading in humid conditions. White mold on undersides of leaves. Can destroy entire plant in 3-5 days if untreated.",
-        "cause": "Caused by Phytophthora infestans fungus. Spreads through water droplets and soil. Thrives in cool, wet conditions (55-75°F with high humidity).",
-        "treatment": "Apply copper-based fungicides or fixed copper spray every 7-10 days. Remove infected leaves and plants immediately. Improve air circulation. Use resistant tomato varieties. Apply at first sign of disease.",
-        "prevention": "Plant resistant varieties. Maintain proper spacing for air flow. Water at soil level only, never on leaves. Remove fallen leaves and debris. Rotate crops yearly. Use certified disease-free seed."
+        "name": "Leaf Spot Disease",
+        "crop": "Plant Leaf",
+        "symptoms": "Small dark spots or lesions on leaf surface, often with yellow halos. Spots may merge, causing large necrotic areas.",
+        "cause": "Fungal or bacterial pathogens that thrive in warm, wet conditions; spread by water splash and contaminated tools.",
+        "treatment": "Remove affected leaves, apply neem oil or copper fungicide, improve airflow and avoid overhead irrigation.",
+        "prevention": "Ensure proper spacing, use drip irrigation, maintain clean tools, and apply preventive sprays during humid weather."
     },
     {
         "id": 2,
-        "name": "Tomato Early Blight",
-        "crop": "Tomato",
-        "symptoms": "Circular brown spots with concentric rings (target-like pattern) on lower leaves. Yellow halo around spots. Spots gradually spread upward on the plant. Can cause severe defoliation.",
-        "cause": "Caused by Alternaria solani fungus. Spreads through soil splashing on leaves and airborne spores. Worsened by overhead watering and poor air circulation.",
-        "treatment": "Prune infected leaves and destroy them. Apply fungicide containing mancozeb or chlorothalonil every 7 days. Stake and prune plants for air circulation. Remove diseased plant material from field.",
-        "prevention": "Use drip irrigation instead of overhead watering. Mulch to prevent soil splash. Maintain plant spacing. Remove lower leaves. Rotate crops. Practice good sanitation. Use resistant varieties."
+        "name": "Severe Fungal Infection",
+        "crop": "Plant Leaf",
+        "symptoms": "Dark brown to black lesions, rapid leaf necrosis, potential stem infection and wilting.",
+        "cause": "Aggressive fungal pathogens (e.g., Phytophthora), favored by cool, wet environments and poor drainage.",
+        "treatment": "Apply fungicide spray, avoid wet leaves, improve airflow, remove infected plants promptly.",
+        "prevention": "Use resistant varieties, avoid overhead watering, maintain clean field and proper rotation."
     },
     {
         "id": 3,
-        "name": "Potato Late Blight",
-        "crop": "Potato",
-        "symptoms": "Water-soaked lesions on leaves that turn brown or black. White mycelial growth on leaf undersides. Rapid defoliation. Tubers develop dark, sunken lesions that can rot completely.",
-        "cause": "Caused by Phytophthora infestans. Most severe in cool, wet conditions. Spreads rapidly in rainfall. Can cause total crop failure. Historical cause of Irish Potato Famine.",
-        "treatment": "Apply copper-based fungicides weekly starting at plant emergence. Use potato-specific fungicides like mancozeb or chlorothalonil. Remove affected plants immediately. Stop overhead irrigation if possible.",
-        "prevention": "Plant certified disease-free seed potatoes. Use resistant varieties (Ranger Russet, Elba). Rotate crops for 3+ years. Avoid overhead watering. Hill soil around plants. Destroy volunteer potatoes and cull infected tubers."
+        "name": "Nutrient Deficiency",
+        "crop": "Plant Leaf",
+        "symptoms": "Yellowing leaves (chlorosis), stunted growth, pale veins, or overall weak plant vigor.",
+        "cause": "Lack of essential nutrients (NPK, iron, magnesium) and poor soil quality.",
+        "treatment": "Apply balanced fertilizer, correct pH, and add organic matter to soil.",
+        "prevention": "Regular soil testing, proper fertilization schedule, and maintaining soil health."
     },
     {
         "id": 4,
-        "name": "Potato Healthy",
-        "crop": "Potato",
-        "symptoms": "Uniform green leaves without spots or discoloration. Strong upright growth. Consistent plant color throughout. No wilting or unusual growth patterns.",
-        "cause": "Good growing conditions and proper crop management lead to healthy plants. Includes proper soil preparation, adequate spacing, correct watering, and disease prevention.",
-        "treatment": "Maintain excellent cultural practices. Continue monitoring for early signs of disease. Apply preventive fungicides if weather favors disease development.",
-        "prevention": "Use certified disease-free seed potatoes. Practice crop rotation. Maintain well-drained soil. Provide adequate spacing for air circulation. Water at soil level. Remove weeds. Scout regularly. Follow integrated pest management."
+        "name": "Viral Infection",
+        "crop": "Plant Leaf",
+        "symptoms": "Leaf curling, distortion, mosaic patterns, and stunted growth; spread via insects.",
+        "cause": "Viral pathogens transmitted by insects (aphids, whiteflies) and contaminated equipment.",
+        "treatment": "Remove infected plants, control insect vectors, and isolate healthy plants.",
+        "prevention": "Use virus-free seed, control insects, and practice crop rotation and biological control."
     }
 ]
 

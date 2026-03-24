@@ -22,9 +22,11 @@ export default function Navbar() {
           {/* Logo and Title */}
           <div className="flex items-center cursor-pointer" onClick={() => navigate("/home")}>
             <span className="text-3xl mr-3">🌱</span>
-            <h1 className="text-2xl font-bold text-green-700">CropAI</h1>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-green-700">CropAI</h1>
+              <span className="mt-1 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Supports Multiple Crops (Generalized AI)</span>
+            </div>
           </div>
-
           {/* Nav Links */}
           <div className="flex items-center space-x-8">
             <button

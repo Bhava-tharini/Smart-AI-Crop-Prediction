@@ -108,7 +108,7 @@ export default function Dashboard() {
           >
             <div className="text-5xl mb-4">🦠</div>
             <h2 className="text-2xl font-bold mb-3 text-gray-800">Disease Reference</h2>
-            <p className="text-gray-600 mb-4">Learn about common potato and tomato leaf diseases</p>
+            <p className="text-gray-600 mb-4">Learn about common plant leaf diseases</p>
             <div className="text-green-600 font-semibold hover:text-green-700">
               Learn More →
             </div>

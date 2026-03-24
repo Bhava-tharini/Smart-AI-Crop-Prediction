@@ -74,9 +74,6 @@ def api_predict(user):
 
     result = ModelService.predict(request.files["image"])
     
-    if result["error"]:
-        return jsonify(result), 500
-    
     # Save prediction to database
     try:
         prediction = Prediction(
@@ -92,11 +89,7 @@ def api_predict(user):
         db.session.rollback()
         print(f"[CropAI] Failed to save prediction: {e}")
     
-    return jsonify({
-        "disease": result["disease"],
-        "confidence": result["confidence"],
-        "treatment": result["treatment"]
-    }), 200
+    return jsonify(result), 200
 
 
 @app.route("/api/health", methods=["GET"])

@@ -96,8 +96,8 @@ export default function Predict() {
                 <div className="flex items-start space-x-4">
                   <div className="text-2xl">🌿</div>
                   <div>
-                    <h3 className="font-semibold text-gray-800">Tomato & Potato Support</h3>
-                    <p className="text-gray-600">Detects multiple disease types for both crops</p>
+                    <h3 className="font-semibold text-gray-800">Universal Plant Support</h3>
+                    <p className="text-gray-600">Detects diseases across all crops and plants</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -174,6 +174,11 @@ export default function Predict() {
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Detection Results</h3>
                   
                   <div className="mb-4">
+                    <p className="text-sm text-gray-600 mb-2">Crop Type</p>
+                    <p className="text-xl font-semibold text-green-700">{result.crop}</p>
+                  </div>
+                  
+                  <div className="mb-4">
                     <p className="text-sm text-gray-600 mb-2">Disease Detected</p>
                     <p className="text-2xl font-bold text-green-700">{result.disease}</p>
                   </div>
@@ -189,9 +194,23 @@ export default function Predict() {
                     <p className="text-lg font-semibold text-gray-800 mt-1">{result.confidence.toFixed(1)}% confidence</p>
                   </div>
 
-                  <div className="bg-white rounded-lg p-4 border border-green-200">
+                  <div className="bg-white rounded-lg p-4 border border-green-200 mb-4">
                     <p className="text-sm text-gray-600 mb-2 font-semibold">Recommended Treatment</p>
                     <p className="text-gray-800 leading-relaxed">{result.treatment}</p>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 border border-blue-200 mb-4">
+                    <p className="text-sm text-gray-600 mb-2 font-semibold">Prevention Tips</p>
+                    <p className="text-gray-800 leading-relaxed">{result.prevention}</p>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 border border-purple-200">
+                    <p className="text-sm text-gray-600 mb-2 font-semibold">Additional Tips</p>
+                    <ul className="text-gray-800 list-disc list-inside leading-relaxed">
+                      {result.tips.map((tip, index) => (
+                        <li key={index}>{tip}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               )}

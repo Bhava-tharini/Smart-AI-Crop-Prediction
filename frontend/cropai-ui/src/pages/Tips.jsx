@@ -39,11 +39,8 @@ export default function Tips() {
     }
   }
 
-  const filteredDiseases = cropFilter === "all" 
-    ? diseases 
-    : diseases.filter(d => d.crop === cropFilter)
-
-  const crops = ["all", ...new Set(diseases.map(d => d.crop))]
+  const filteredDiseases = diseases
+  const crops = []
 
   if (loading) {
     return (
@@ -80,25 +77,8 @@ export default function Tips() {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-white p-8 md:p-12">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">🦠 Disease Reference Guide</h1>
-          <p className="text-gray-600 mb-8">Learn about common potato and tomato diseases, their symptoms, causes, and prevention methods</p>
-
-          {/* Crop Filter */}
-          <div className="flex flex-wrap gap-3 mb-8">
-            {crops.map(crop => (
-              <button
-                key={crop}
-                onClick={() => setCropFilter(crop)}
-                className={`px-4 py-2 rounded-full font-medium transition ${
-                  cropFilter === crop
-                    ? "bg-green-600 text-white"
-                    : "bg-white text-gray-700 border border-gray-300 hover:border-green-600"
-                }`}
-              >
-                {crop === "all" ? "All Diseases" : crop}
-              </button>
-            ))}
-          </div>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">🦠 Common Plant Disease Guide</h1>
+          <p className="text-gray-600 mb-8">Learn about common plant diseases, their symptoms, causes, and prevention methods</p>
 
           {/* Empty State */}
           {filteredDiseases.length === 0 ? (
@@ -116,7 +96,7 @@ export default function Tips() {
                 >
                   <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
                     <h3 className="text-xl font-bold">{disease.name}</h3>
-                    <p className="text-green-100 text-sm">{disease.crop}</p>
+                    <p className="text-green-100 text-sm">Detected Leaf Disease</p>
                   </div>
 
                   <div className="p-6">

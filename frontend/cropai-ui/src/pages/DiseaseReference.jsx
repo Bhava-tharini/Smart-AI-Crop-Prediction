@@ -81,7 +81,7 @@ export default function DiseaseReference() {
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-white p-8 md:p-12">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">🦠 Disease Reference Guide</h1>
-          <p className="text-gray-600 mb-8">Learn about common potato and tomato diseases, their symptoms, causes, and prevention methods</p>
+          <p className="text-gray-600 mb-8">Learn about common plant diseases, their symptoms, causes, and prevention methods</p>
 
           {/* Crop Filter */}
           <div className="flex flex-wrap gap-3 mb-8">
